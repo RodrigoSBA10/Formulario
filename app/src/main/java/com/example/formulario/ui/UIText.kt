@@ -10,6 +10,7 @@ sealed interface UIText {
         @StringRes val id: Int,
         vararg val argumentos: Any
     ): UIText
+
     @Composable
     fun asString(): String{
         return when(this){

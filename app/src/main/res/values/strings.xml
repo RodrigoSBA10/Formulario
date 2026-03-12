@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Formulario</string>
+    <string name="nombre">Ingresa Nombre</string>
+    <string name="requerido">El nombre es obligatorio</string>
 </resources>

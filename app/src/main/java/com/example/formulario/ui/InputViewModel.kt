@@ -12,6 +12,11 @@ class InputViewModel: ViewModel() {
     var nameField by mutableStateOf(FieldInput())
     val nameErrorStatus by derivedStateOf { validateName(nameField.valor) }
 
+    val emailField by mutableStateOf(FieldInput())
+
+    val emailErrorStatus by derivedStateOf { validateEmail(emailField.valor) }
+
+
     fun validateName(name: String): ErrorStatus{
         return when{
             name.trim().isEmpty() -> {
@@ -20,7 +25,23 @@ class InputViewModel: ViewModel() {
                 ErrorStatus(false)
             }
         }
+    }
 
+    fun validateEmail(email: String): ErrorStatus {
+        val emailPattern = Regex("[a-zA-Z\\d._-]+@[a-z]+\\.+[a-z]+")
+        return when {
+            email.trim().isEmpty() -> {
+                ErrorStatus(true, UIText.RecursoCadena(R.string.requerido))
+            }
+
+            !email.trim().matches(emailPattern) -> {
+                ErrorStatus(true, UIText.RecursoCadena(R.string.email))
+            }
+
+            else -> {
+                ErrorStatus(false)
+            }
+        }
     }
 }
 

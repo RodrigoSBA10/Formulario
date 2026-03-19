@@ -30,6 +30,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.formulario.R
+import com.example.formulario.persistencia.ServicioDatos
+import com.example.formulario.persistencia.Usuario
 
 @Composable
 fun OutlinedTextFieldWithSate(
@@ -57,7 +59,7 @@ fun OutlinedTextFieldWithSate(
     ) }
 
 
-//@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun InputPreview( ) {
     val context = LocalContext.current
@@ -70,7 +72,11 @@ fun InputPreview( ) {
                 onClick = {if(inputViewModel.nameErrorStatus.isError){
                     inputViewModel.nameErrorStatus.errorMessage?.let { context.showToast(it.asString(context)) }
                     return@Button
-                } else { context.showToast("Correcto") }},
+                } else { val servicio = ServicioDatos(context)
+                    servicio.agregarUsuario(Usuario(0, "Rodrigo", "rsba@gmail.com"))
+                    context.showToast(servicio.obtenerUsuarios().toString())}
+
+                          },
             ) {
                 Text(text="Enviar")
             }
@@ -111,7 +117,7 @@ fun InputPreview( ) {
                         imeAction = ImeAction.Next
                     ),
                 ) {
-                    inputViewModel.nameField = inputViewModel.nameField.copy(
+                    inputViewModel.emailField = inputViewModel.emailField.copy(
                         valor = it,
                         hasInterected = true
                     )

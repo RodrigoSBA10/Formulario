@@ -12,7 +12,7 @@ class InputViewModel: ViewModel() {
     var nameField by mutableStateOf(FieldInput())
     val nameErrorStatus by derivedStateOf { validateName(nameField.valor) }
 
-    val emailField by mutableStateOf(FieldInput())
+    var emailField by mutableStateOf(FieldInput())
 
     val emailErrorStatus by derivedStateOf { validateEmail(emailField.valor) }
 

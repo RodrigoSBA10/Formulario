@@ -1,7 +1,6 @@
 package com.example.formulario.persistencia
 
 import android.content.Context
-import android.provider.ContactsContract
 
 class ServicioDatos(aplicationContext: Context) {
     val dataBase = AppDataBase.getDataBase(aplicationContext)

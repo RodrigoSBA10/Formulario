@@ -27,11 +27,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
+
 import androidx.compose.ui.unit.dp
 import com.example.formulario.R
 import com.example.formulario.persistencia.ServicioDatos
 import com.example.formulario.persistencia.Usuario
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 @Composable
 fun OutlinedTextFieldWithSate(
@@ -59,26 +63,41 @@ fun OutlinedTextFieldWithSate(
     ) }
 
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun InputPreview( ) {
     val context = LocalContext.current
     val inputViewModel: InputViewModel = viewModel()
+    val servicio = ServicioDatos(context)
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
             Button(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                onClick = {if(inputViewModel.nameErrorStatus.isError){
-                    inputViewModel.nameErrorStatus.errorMessage?.let { context.showToast(it.asString(context)) }
-                    return@Button
-                } else { val servicio = ServicioDatos(context)
-                    servicio.agregarUsuario(Usuario(0, "Rodrigo", "rsba@gmail.com"))
-                    context.showToast(servicio.obtenerUsuarios().toString())}
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                onClick = {
+                    if (inputViewModel.nameErrorStatus.isError) {
+                        inputViewModel.nameErrorStatus.errorMessage
+                            ?.let { context.showToast(it.asString(context)) }
+                        return@Button
+                    } else {
 
-                          },
+                        CoroutineScope(Dispatchers.IO).launch {
+                            servicio.agregarUsuario(
+                                Usuario(
+                                    0,
+                                    inputViewModel.nameField.valor,
+                                    inputViewModel.emailField.valor
+                                )
+                            )
+                        }
+
+                        context.showToast("Enviado")
+                    }
+                }
             ) {
-                Text(text="Enviar")
+                Text(text = "Enviar")
             }
         }
     ) { innerPadding ->
@@ -107,7 +126,7 @@ fun InputPreview( ) {
                     )
                 }
                 OutlinedTextFieldWithSate(
-                    modifier = Modifier.fillMaxWidth(), // Cambiado a fillMaxWidth
+                    modifier = Modifier.fillMaxWidth(),
                     label = stringResource(id = R.string.correo),
                     fielfInput = inputViewModel.emailField,
                     errorStatus = inputViewModel.emailErrorStatus,

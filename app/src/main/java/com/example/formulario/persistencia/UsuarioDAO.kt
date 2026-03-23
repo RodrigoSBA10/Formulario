@@ -1,11 +1,11 @@
 package com.example.formulario.persistencia
 
-import android.provider.ContactsContract
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 
-
+@Dao
 interface UsuarioDAO {
     @Query("SELECT * FROM usuario")
     fun getAll(): List<Usuario>
@@ -14,7 +14,7 @@ interface UsuarioDAO {
     fun loadAllByIds(userIds: IntArray): List<Usuario>
 
     @Query("SELECT *  FROM usuario WHERE nombres LIKE :nombre AND email LIKE :email LIMIT 1")
-    fun findByNameAndEmail(nombre: String, email: String )
+    fun findByNameAndEmail(nombre: String, email: String ): Usuario
 
     @Insert
     fun insertAll(vararg usuarios: Usuario)
